@@ -3,7 +3,7 @@ package Text::Patch;
 use Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( patch );
-our $VERSION = '1.0';
+our $VERSION = '1.1';
 use strict;
 use warnings;
 use Carp;
@@ -118,7 +118,7 @@ Options are:
 
   STYLE => 'Unified'
   
-Note that urrently only 'Unified' diff format is supported!
+Note that currently only 'Unified' diff format is supported!
 STYLE names are the same described in Text::Diff.
 
 The 'Unified' diff format looks like this:
@@ -163,7 +163,7 @@ The 'Unified' diff format looks like this:
 
 =head1 VERSION
 
-  $Id: Patch.pm,v 1.1 2004/12/06 19:54:27 cade Exp $
+  $Id: Patch.pm,v 1.2 2004/12/07 21:26:41 cade Exp $
 
 =cut
 

@@ -8,13 +8,8 @@
 use Test;
 BEGIN { plan tests => 1 };
 use strict;
-
-eval
-{
 use Text::Diff;
 use Text::Patch;
-};
-ok(1) if $@; # failsafe, actually there is nothing to test without Text::Diff
 
 my $t1 = '
 The Way that can be told of is not the eternal Way;
