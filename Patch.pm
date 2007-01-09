@@ -3,7 +3,7 @@ package Text::Patch;
 use Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( patch );
-our $VERSION = '1.1';
+our $VERSION = '1.2';
 use strict;
 use warnings;
 use Carp;
@@ -13,7 +13,7 @@ sub patch
   my $text = shift;
   my $diff = shift;
   my %options;
-  
+
   if( ref $_[0] eq 'HASH' )
     {
     %options = %{ $_[0] };
@@ -21,7 +21,7 @@ sub patch
   else
     {
     %options = @_;
-    }  
+    }
 
   return patch_unified( $text, $diff ) if $options{ 'STYLE' } eq 'Unified';
   croak "required STYLE option is missing";
@@ -31,13 +31,13 @@ sub patch_unified
 {
   my $text = shift;
   my $diff = shift;
-  
+
   my @text = split /^/m, $text;
   my @diff = split /^/m, $diff;
-  
+
   my @hunks;
   my %hunk;
-  
+
   for( @diff )
     {
     #print STDERR ">>> ... $_";
@@ -47,13 +47,15 @@ sub patch_unified
       push @hunks, { %hunk };
       %hunk = ();
       $hunk{ FROM } = $1 - 1; # diff is 1-based
+      # Modification by Ben L., patches may have @@ -0,0 if the source is empty.
+      $hunk{ FROM } = 0 if $hunk{ FROM } < 0;
       $hunk{ LEN  } = $2;
       $hunk{ DATA } = [];
       }
     push @{ $hunk{ DATA } }, $_;
     }
   push @hunks, { %hunk }; # push last hunk
-  shift @hunks; # first is always empty  
+  shift @hunks; # first is always empty
 
   for my $hunk ( reverse @hunks )
     {
@@ -69,8 +71,8 @@ sub patch_unified
       }
     splice @text, $hunk->{ FROM }, $hunk->{ LEN }, @pdata;
     }
-  
-  return join '', @text;  
+
+  return join '', @text;
 }
 
 =pod
@@ -82,23 +84,23 @@ Text::Patch - Patches text with given patch
 =head1 SYNOPSIS
 
     use Text::Patch;
-    
+
     $output = patch( $source, $diff, STYLE => "Unified" );
 
     use Text::Diff;
-    
+
     $src  = ...
     $dst  = ...
-    
+
     $diff = diff( $src, $dst, { STYLE => 'Unified' } );
-    
+
     $out  = patch( $src, $diff, { STYLE => 'Unified' } );
-    
+
     print "Patch successful" if $out eq $dst;
 
 =head1 DESCRIPTION
 
-Text::Patch combines source text with given diff (difference) data. 
+Text::Patch combines source text with given diff (difference) data.
 Diff data is produced by Text::Diff module or by the standard diff
 utility (man diff, see -u option).
 
@@ -117,7 +119,7 @@ rest arguments will be considered patch options:
 Options are:
 
   STYLE => 'Unified'
-  
+
 Note that currently only 'Unified' diff format is supported!
 STYLE names are the same described in Text::Diff.
 
@@ -147,7 +149,7 @@ The 'Unified' diff format looks like this:
 =head1 LIMITS
 
   Only 'Unified' diff format is supported.
-  
+
 =head1 TODO
 
   Interfaces with files, arrays, etc.
@@ -156,14 +158,14 @@ The 'Unified' diff format looks like this:
 =head1 AUTHOR
 
   Vladi Belperchinov-Shabanski "Cade"
- 
+
   <cade@biscom.net> <cade@datamax.bg> <cade@cpan.org>
 
   http://cade.datamax.bg
 
 =head1 VERSION
 
-  $Id: Patch.pm,v 1.2 2004/12/07 21:26:41 cade Exp $
+  $Id: Patch.pm,v 1.4 2007/01/09 00:11:15 cade Exp $
 
 =cut
 
