@@ -4,4 +4,5 @@ Makefile.PL
 Patch.pm
 README
 test.pl
+ChangeLog
 META.yml                                 Module meta-data (added by MakeMaker)

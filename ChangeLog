@@ -1,0 +1,11 @@
+
+
+20070407 v1.3 
+
+Patches by Andrew <sobakasu@gmail.com>
+- add support for patching with 'OldStyle' & 'Context' patches
+- recognises and supports "\ No newline at end of file" markers.
+- updated the unit test to test patches with newline endings.
+- dies when a hunk can't be successfully applied
+
+Previous history lost...
