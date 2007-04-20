@@ -1,4 +1,10 @@
 
+20070420 v1.4
+
+Andrew <sobakasu@gmail.com>
+- no-nl at end of file bug fixed
+- additional tests added to test.pl
+- dep. on Text::Diff in test.pl dropped until it supports no-nl case
 
 20070407 v1.3 
 

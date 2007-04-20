@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		    => 'Text::Patch',
     'VERSION_FROM'	=> 'Patch.pm', # finds $VERSION
-    'PREREQ_PM'		=> { Text::Diff => 0 }, # e.g., Module::Name => 1.1
+    'PREREQ_PM'		=> { Test::More => 0 }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'Patch.pm', # retrieve abstract from module
        AUTHOR        => 'Vladi Belperchinov-Shabanski <cade@biscom.net>') : ()),
