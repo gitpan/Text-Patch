@@ -3,6 +3,6 @@ MANIFEST
 Makefile.PL
 Patch.pm
 README
-test.pl
+t/test.pl
 ChangeLog
 META.yml                                 Module meta-data (added by MakeMaker)

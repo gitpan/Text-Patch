@@ -2,7 +2,7 @@ package Text::Patch;
 use Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( patch );
-our $VERSION = '1.4';
+our $VERSION = '1.5';
 use strict;
 use warnings;
 use Carp;
@@ -36,8 +36,11 @@ sub patch
 
   # apply patch
   DUMP("got patch", \@diff);
+  my $out = $code->(\@text, \@diff, $sep);
 
-  return $code->(\@text, \@diff, $sep);
+  my $lastline = _chomp($diff[-1], $sep);
+  $out = _chomp($out, $sep) if $lastline eq NO_NEWLINE;
+  return $out;
 }
 
 sub patch_unified
@@ -83,7 +86,7 @@ sub patch_oldstyle {
         my($pos1, $count1) = _range($r1);
         my($pos2, $count2) = _range($r2);
 
-        # parse hunk data
+        # parse chunk data
         my @data;
         my $j = $i + 1;
         for(; $j < @$diff; $j++) {
@@ -148,22 +151,18 @@ sub patch_context {
         # read the from and to part of this hunk
         my($part1, $pos1, $count1) = $read_part->();
         my($part2, $pos2, $count2) = $read_part->();
-        $i++;  # skip hunk separator
+        $i++;  # skip chunk separator
 
         # convert operations to unified style ones
-        $_ =~ s/^(\+|\-|\s)\s/$1/ for @$part1, @$part2;
-        $_ =~ s/^\!\s/-/ for @$part1;  # remove
-        $_ =~ s/^\!\s/+/ for @$part2;  # add
+        $_ =~ s/^(.)\s/$1/ for @$part1, @$part2;
+        $_ =~ s/^\!/-/ for @$part1;  # remove
+        $_ =~ s/^\!/+/ for @$part2;  # add
 
-        # merge the parts to create a unified style hunk
+        # merge the parts to create a unified style chunk
         my @data;
         for(;;) {
             my $c1 = $part1->[0];
             my $c2 = $part2->[0];
-
-            # don't propogate no newlines of "from" file to the hunk
-            undef $c1 if _no_newline($c1, $sep);
-
             last unless defined $c1 || defined $c2;
 
             if(defined $c1 && $c1 =~ /^-/) {
@@ -198,16 +197,6 @@ sub _patch {
   my($text, $hunks, $sep) = @_;
   my $hunknum = scalar @$hunks + 1;
   die "No hunks found\n" unless @$hunks;
-
-  # analyse last hunk for newline information
-  my $no_newline = 0;
-  my $lasth = $hunks->[-1];
-  my $lastd = $lasth->{DATA};
-  # 'to' file has no newline at end if there is a no newline marker as
-  # the last line and the previous line was a '+'
-  $no_newline = 1 if @$lastd >= 2 && _no_newline($lastd->[-1], $sep) &&
-      $lastd->[-2] =~ /^\+/;
-
   for my $hunk ( reverse @$hunks )
     {
     $hunknum--;
@@ -234,17 +223,13 @@ sub _patch {
     splice @$text, $hunk->{ FROM }, $hunk->{ LEN }, @pdata;
     }
 
-  my $out = join '', @$text;
-  $out = _chomp($out, $sep) if $no_newline;
-  return $out;
+  return join '', @$text;
 }
 
-# returns $text without newline $sep
-# if $sep is not given, defaults to unix or dos line ending
-# in list context also returns chomped separator
+# chomp $sep from the end of line
+# if $sep is not given, chomp unix or dos line ending
 sub _chomp {
     my($text, $sep) = @_;
-    return $text unless defined $text;
     if($sep) {
         $text =~ s/($sep)$//;
     } else {
@@ -252,14 +237,6 @@ sub _chomp {
     }
     return wantarray ? ($text, $1) : $text;
 }
-
-# returns true if line contains a no newline marker
-sub _no_newline {
-    my($text, $sep) = @_;
-    my $t = _chomp($text, $sep);
-    return defined $t && $t eq NO_NEWLINE ? 1 : 0;
-}
-
 
 sub DUMP {}
 sub TRACE {}
