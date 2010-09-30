@@ -1,10 +1,13 @@
 
+20100930 v1.6
+
+- fixed empty t dir
 
 20100908 v1.5
 
 - moved tests to 't' (note by Alexandr Ciornii)
 
-20070407 v1.3 
+20070407 v1.3
 
 Patches by Andrew <sobakasu@gmail.com>
 - add support for patching with 'OldStyle' & 'Context' patches

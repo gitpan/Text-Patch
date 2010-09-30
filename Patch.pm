@@ -2,7 +2,7 @@ package Text::Patch;
 use Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( patch );
-our $VERSION = '1.5';
+our $VERSION = '1.6';
 use strict;
 use warnings;
 use Carp;
