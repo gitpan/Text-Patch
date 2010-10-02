@@ -2,7 +2,7 @@ package Text::Patch;
 use Exporter;
 our @ISA = qw( Exporter );
 our @EXPORT = qw( patch );
-our $VERSION = '1.6';
+our $VERSION = '1.7';
 use strict;
 use warnings;
 use Carp;
@@ -201,7 +201,6 @@ sub _patch {
     {
     $hunknum--;
     DUMP("hunk", $hunk);
-
     my @pdata;
     my $num = $hunk->{FROM};
     for( @{ $hunk->{ DATA } } )
@@ -213,7 +212,8 @@ sub _patch {
           # ignore line endings for comparison
           my $orig   = _chomp($text->[$num++], $sep); # num 0 based here
           my $expect = _chomp($_, $sep);
-          TRACE("checking >>$orig<< against >>$expect<<");
+          TRACE("checking >>$orig<<");
+          TRACE(" against >>$expect<<");
           die "Hunk #$hunknum failed at line $num.\n" # actual line number
               unless $orig eq $expect;
       }
@@ -240,6 +240,16 @@ sub _chomp {
 
 sub DUMP {}
 sub TRACE {}
+
+#sub DUMP {
+#use Data::Dumper;
+#print STDERR Dumper(@_);
+#}
+#sub TRACE {
+#use Data::Dumper;
+#print STDERR Dumper(@_);
+#}
+
 
 =pod
 

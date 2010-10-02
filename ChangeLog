@@ -1,4 +1,9 @@
 
+20101002 v1.7
+
+- t/*.t fixed to use native diff(1) if available.
+  (Text::Diff 1.37 seems broken)
+
 20100930 v1.6
 
 - fixed empty t dir
