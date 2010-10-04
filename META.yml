@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Text-Patch
-version:            1.7
+version:            1.8
 abstract:           Patches text with given patch
 author:
     - Vladi Belperchinov-Shabanski <cade@biscom.net>

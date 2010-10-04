@@ -1,4 +1,8 @@
 
+20101004 v1.8
+
+- t/*.t temporary removed all tests, see t/test.t for details
+
 20101002 v1.7
 
 - t/*.t fixed to use native diff(1) if available.
